@@ -1,5 +1,6 @@
 import "@/styles/global.css";
 import { useAuth } from "./hooks/useAuth";
+import { DashboardPage } from "@/components/pages/DashboardPage";
 
 // export function generatePKCE() {
 //   const array = new Uint8Array(32);
@@ -48,6 +49,7 @@ export function App() {
   return (
     <div>
       {/* <button onClick={login}>{isLoggedIn ? "Logout" : "Login"}</button> */}
+      <DashboardPage />
     </div>
   );
 }
