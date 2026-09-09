@@ -3,7 +3,7 @@ import { Topbar } from "@/components/layout/Topbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 
 interface AppShellProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export function AppShell({ children }: AppShellProps) {

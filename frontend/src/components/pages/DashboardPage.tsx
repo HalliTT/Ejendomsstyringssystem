@@ -1,11 +1,10 @@
 import { AppShell } from "@/components/layout/AppShell";
+import { Outlet } from "react-router";
 
 export function DashboardPage() {
   return (
     <AppShell>
-      <div>
-        <h1>Dashboard</h1>
-      </div>
+      <Outlet />
     </AppShell>
   );
 }
