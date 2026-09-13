@@ -7,6 +7,16 @@
   --color-bg-glass: rgba(255, 255, 255, 0.75);
 
   --color-text-primary: #1d1d1f;
+  --color-text-secondary: #6e6e73;
+
+  --color-success: #34c759;
+  --color-success-soft: rgba(52, 199, 89, 0.12);
+  --color-warning: #ff9f0a;
+  --color-warning-soft: rgba(255, 159, 10, 0.12);
+  --color-danger: #ff3b30;
+  --color-danger-soft: rgba(255, 59, 48, 0.12);
+  --color-purple: #af52de;
+  --color-purple-soft: rgba(175, 82, 222, 0.12);
 
   --color-border: rgba(0, 0, 0, 0.08);
   --color-border-strong: rgba(0, 0, 0, 0.12);

@@ -15,23 +15,28 @@ namespace ESS.Infrastructure.Persistence.Configuration
                 .HasDefaultValueSql("gen_random_uuid()");
 
             builder.Property(x => x.OwnerId)
-                .HasColumnName("owner_id");
+                .HasColumnName("owner_id")
+                .IsRequired();
 
             builder.Property(x => x.Name)
                 .HasColumnName("name")
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsRequired();
 
             builder.Property(x => x.Address)
                 .HasColumnName("address")
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsRequired();
 
             builder.Property(x => x.City)
                 .HasColumnName("city")
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsRequired();
 
             builder.Property(x => x.Country)
                 .HasColumnName("country")
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsRequired();
 
             builder.Property(x => x.Description)
                 .HasColumnName("description")
@@ -51,6 +56,11 @@ namespace ESS.Infrastructure.Persistence.Configuration
             builder.Property(x => x.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
+
+            builder.HasOne<Domain.Owners.Owner>()
+                .WithMany()
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

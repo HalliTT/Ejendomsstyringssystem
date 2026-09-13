@@ -3,26 +3,30 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ESS.Infrastructure.Persistence.Configuration
 {
-    public class OwnerConfiguration : IEntityTypeConfiguration<Domain.Owners.Owner>
+    public class UnitConfiguration : IEntityTypeConfiguration<Domain.Units.Unit>
     {
-        public void Configure(EntityTypeBuilder<Domain.Owners.Owner> builder)
+        public void Configure(EntityTypeBuilder<Domain.Units.Unit> builder)
         {
-            builder.ToTable("owners");
+            builder.ToTable("units");
+
 
             builder.HasKey(t => t.Id);
             builder.Property(x => x.Id)
                 .HasColumnName("id")
                 .HasDefaultValueSql("gen_random_uuid()");
 
+            builder.Property(x => x.PropertyId)
+                .HasColumnName("property_id")
+                .IsRequired();
+
             builder.Property(x => x.Name)
                 .HasColumnName("name")
                 .HasMaxLength(255)
                 .IsRequired();
 
-            builder.Property(x => x.Email)
-                .HasColumnName("email")
-                .HasMaxLength(255)
-                .IsRequired();
+            builder.Property(x => x.Description)
+                .HasColumnName("description")
+                .HasMaxLength(255);
 
             builder.Property(x => x.IsEnabled)
                 .HasColumnName("is_enabled")
@@ -38,6 +42,12 @@ namespace ESS.Infrastructure.Persistence.Configuration
             builder.Property(x => x.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
+
+            builder.HasOne<Domain.Properties.Property>()
+                .WithMany()
+                .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
+

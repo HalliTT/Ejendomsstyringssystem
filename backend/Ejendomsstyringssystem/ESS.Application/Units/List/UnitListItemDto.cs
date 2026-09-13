@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ESS.Application.Properties.List
+namespace ESS.Application.Units.List
 {
-    public sealed record PropertyDto
+    public sealed record UnitListItemDto
     (
         Guid Id,
         string Name,
-        string Address
+        string Description
     );
 }

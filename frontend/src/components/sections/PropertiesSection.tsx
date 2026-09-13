@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import "@/components/sections/PropertiesSection.css";
 import { getProperties } from "@/api/properties";
+import { PropertyCard } from "@/components/sections/PropertyCard";
 
 export function PropertiesSection() {
   const {
@@ -20,15 +22,12 @@ export function PropertiesSection() {
   }
 
   return (
-    <div className="properties-section">
-      <h2>Properties Section</h2>
-      {properties?.map((property) => (
-        <div key={property.id}>
-          <h2>{property.address}</h2>
-          <p>{property.city}</p>
-          <p>{property.monthlyRent} kr.</p>
-        </div>
-      ))}
+    <div>
+      <div className="properties-grid">
+        {properties?.map((property) => (
+          <PropertyCard key={property.id} property={property}></PropertyCard>
+        ))}
+      </div>
     </div>
   );
 }

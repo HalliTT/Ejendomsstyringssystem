@@ -23,5 +23,15 @@ namespace ESS.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("{propertyId:Guid}")]
+        public async Task<IActionResult> GetProperty(Guid propertyId, CancellationToken ct)
+        {
+            var result = await _sender.Send(
+                new Application.Properties.Get.Query(propertyId),
+            ct);
+
+            return Ok(result);
+        }
     }
 }

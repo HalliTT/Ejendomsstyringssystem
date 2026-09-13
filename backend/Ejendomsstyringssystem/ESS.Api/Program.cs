@@ -1,5 +1,6 @@
 using ESS.Domain.Owners;
 using ESS.Domain.Properties;
+using ESS.Domain.Units;
 using ESS.Infrastructure;
 using ESS.Infrastructure.Persistence;
 using MediatR;
@@ -41,35 +42,36 @@ if (app.Environment.IsDevelopment())
                         .AsNoTracking()
                         .FirstOrDefault();
 
+        Guid ownerId = Guid.NewGuid();
+        if (owner is null)
+        {
+            var newOwner = new Owner
+            {
+                Id = ownerId,
+                Name = "Anton",
+                Email = "Anton@Anton.com",
+                IsEnabled = true,
+                SoftDeletedAt = null,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+            db.Owners.Add(newOwner);
+        }
+        else
+        {
+            ownerId = owner.Id;
+        }
+
         var property = db.Properties
                     .AsNoTracking()
                     .FirstOrDefault();
 
+        Guid propertyId = Guid.NewGuid();
         if (property is null)
         {
-            Guid ownerId = Guid.NewGuid();
-            if (owner is null)
-            {
-                var newOwner = new Owner
-                {
-                    Id = ownerId,
-                    Name = "Anton",
-                    Email = "Anton@Anton.com",
-                    IsEnabled = true,
-                    SoftDeletedAt = null,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                };
-                db.Owners.Add(newOwner);
-            }
-            else
-            {
-                ownerId = owner.Id;
-            }
-
             var newProperty = new Property
             {
-                Id = Guid.NewGuid(),
+                Id = propertyId,
                 OwnerId = ownerId,
                 Name = "Synstrup",
                 Address = "Langå vej 33",
@@ -83,7 +85,31 @@ if (app.Environment.IsDevelopment())
             };
             db.Properties.Add(newProperty);
         }
+        else
+        {
+            propertyId = property.Id;
+        }
 
+        var unit = db.Unit
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+        Guid unitId = Guid.NewGuid();
+        if (unit is null)
+        {
+            var newUnit = new ESS.Domain.Units.Unit
+            {
+                Id = unitId,
+                PropertyId = propertyId,
+                Name = "First Floor",
+                Description = "This is a floor",
+                IsEnabled = true,
+                SoftDeletedAt = null,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+            db.Unit.Add(newUnit);
+        }
         db.SaveChanges();
     }
 }

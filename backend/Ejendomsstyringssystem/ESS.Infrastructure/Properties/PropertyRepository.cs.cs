@@ -23,5 +23,12 @@ namespace ESS.Infrastructure.Properties
                 .AsNoTracking()
                 .ToListAsync(ct);
         }
+
+        public async Task<Property?> GetByIdAsync(Guid id, CancellationToken ct)
+        {
+            return await _context.Properties
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id, ct);
+        }
     }
 }

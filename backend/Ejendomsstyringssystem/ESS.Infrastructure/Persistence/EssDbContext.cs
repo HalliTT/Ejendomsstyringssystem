@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using ESS.Domain.Properties;
 using ESS.Domain.Owners;
+using ESS.Domain.Units;
 
 namespace ESS.Infrastructure.Persistence
 {
@@ -12,6 +13,8 @@ namespace ESS.Infrastructure.Persistence
         public EssDbContext(DbContextOptions<EssDbContext> options) : base(options) { }
         public DbSet<Property> Properties => Set<Property>();
         public DbSet<Owner> Owners => Set<Owner>();
+        public DbSet<Unit> Unit => Set<Unit>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
