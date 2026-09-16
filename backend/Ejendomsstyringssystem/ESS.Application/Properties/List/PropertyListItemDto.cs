@@ -4,6 +4,8 @@
     (
         Guid Id,
         string Name,
-        string Address
+        string Address,
+        int OccupiedUnits,
+        int TotalUnits
     );
 }

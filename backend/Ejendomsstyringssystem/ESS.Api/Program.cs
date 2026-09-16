@@ -1,14 +1,29 @@
+using ESS.Api.Security;
 using ESS.Domain.Owners;
 using ESS.Domain.Properties;
-using ESS.Domain.Units;
 using ESS.Infrastructure;
 using ESS.Infrastructure.Persistence;
-using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddHttpClient("AuthService", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["AuthService:BaseUrl"]!);
+});
+
+builder.Services.AddAuthentication("EssBearer").AddScheme<AuthenticationSchemeOptions, EssBearerAuthenticationHandler>("EssBearer", _ => { });
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ESS.Application.Properties.List.Query).Assembly));
 
@@ -42,7 +57,7 @@ if (app.Environment.IsDevelopment())
                         .AsNoTracking()
                         .FirstOrDefault();
 
-        Guid ownerId = Guid.NewGuid();
+        Guid ownerId = Guid.Parse("aebf22f2-b076-493c-bda0-e27ac102187d");
         if (owner is null)
         {
             var newOwner = new Owner
@@ -116,7 +131,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

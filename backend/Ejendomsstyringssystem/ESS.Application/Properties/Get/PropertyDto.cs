@@ -10,7 +10,10 @@ namespace ESS.Application.Properties.Get
         string City,
         string Country,
         string Description,
+        
+        int OccupiedUnits,
+        int TotalUnits,
 
-        List<UnitListItemDto>? Units
+        List<UnitListItemDto> Units
     );
 }

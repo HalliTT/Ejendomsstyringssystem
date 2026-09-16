@@ -1,9 +1,6 @@
 ﻿using ESS.Application.Units;
 using ESS.Application.Units.List;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ESS.Application.Properties.Get
 {
@@ -29,6 +26,9 @@ namespace ESS.Application.Properties.Get
 
             var units = await  _unitRepository.ListByPropertyIdAsync(request.PropertyId, ct);
 
+            var totalUnits = units.Count;
+            var occupiedUnits = units.Count(u => u.Status == Domain.Units.UnitStatus.Occupied);
+
             return new PropertyDto(
                 property.Id,
                 property.Name ?? "",
@@ -36,10 +36,13 @@ namespace ESS.Application.Properties.Get
                 property.City ?? "",
                 property.Country ?? "",
                 property.Description ?? "",
+                occupiedUnits,
+                totalUnits,
                 units.Select(u => new UnitListItemDto(
                     u.Id,
                     u.Name ?? "",
-                    u.Description ?? ""))
+                    u.Description ?? "",
+                    u.Status))
                 .ToList()
             );
         }
