@@ -1,36 +1,34 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ESS.Infrastructure.Persistence.Configuration
 {
-    public class UnitConfiguration : IEntityTypeConfiguration<Domain.Units.Unit>
+    public class TenantConfiguration : IEntityTypeConfiguration<Domain.Tenants.Tenant>
     {
-        public void Configure(EntityTypeBuilder<Domain.Units.Unit> builder)
+        public void Configure(EntityTypeBuilder<Domain.Tenants.Tenant> builder)
         {
-            builder.ToTable("units");
-
+            builder.ToTable("tenants");
 
             builder.HasKey(t => t.Id);
             builder.Property(x => x.Id)
                 .HasColumnName("id")
                 .HasDefaultValueSql("gen_random_uuid()");
 
-            builder.Property(x => x.PropertyId)
-                .HasColumnName("property_id")
-                .IsRequired();
-
             builder.Property(x => x.Name)
-                .HasColumnName("name")
-                .HasMaxLength(255)
-                .IsRequired();
+               .HasColumnName("name")
+               .HasMaxLength(255)
+               .IsRequired();
 
-            builder.Property(x => x.Description)
-                .HasColumnName("description")
+            builder.Property(x => x.Email)
+                .HasColumnName("email")
                 .HasMaxLength(255);
 
-            builder.Property(x => x.Status)
-                .HasColumnName("status")
-                .HasMaxLength(255);
+            builder.Property(x => x.Phone)
+                .HasColumnName("phone")
+                .HasMaxLength(50);
 
             builder.Property(x => x.IsEnabled)
                 .HasColumnName("is_enabled")
@@ -46,12 +44,6 @@ namespace ESS.Infrastructure.Persistence.Configuration
             builder.Property(x => x.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
-
-            builder.HasOne<Domain.Properties.Property>()
-                .WithMany()
-                .HasForeignKey(x => x.PropertyId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
-

@@ -1,21 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ESS.Domain.Owners;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ESS.Infrastructure.Persistence.Configuration
 {
-    public class OwnerConfiguration : IEntityTypeConfiguration<Domain.Owners.Owner>
+    public class AppUserConfiguration : IEntityTypeConfiguration<Domain.Users.AppUser>
     {
-        public void Configure(EntityTypeBuilder<Domain.Owners.Owner> builder)
+        public void Configure(EntityTypeBuilder<Domain.Users.AppUser> builder)
         {
-            builder.ToTable("owners");
+            builder.ToTable("app_users");
 
-            builder.HasKey(t => t.Id);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
-                .HasColumnName("id")
-                .HasDefaultValueSql("gen_random_uuid()");
+                .HasColumnName("id");
 
-            builder.Property(x => x.Name)
-                .HasColumnName("name")
+            builder.Property(x => x.Email)
+                .HasColumnName("email")
                 .HasMaxLength(255)
                 .IsRequired();
 
@@ -23,14 +23,8 @@ namespace ESS.Infrastructure.Persistence.Configuration
                 .HasColumnName("display_name")
                 .HasMaxLength(255);
 
-            builder.Property(x => x.Avatar)
-                .HasColumnName("avatar")
-                .HasMaxLength(255);
-
-            builder.Property(x => x.Email)
-                .HasColumnName("email")
-                .HasMaxLength(255)
-                .IsRequired();
+            builder.Property(x => x.OwnerId)
+                .HasColumnName("owner_id");
 
             builder.Property(x => x.IsEnabled)
                 .HasColumnName("is_enabled")
@@ -46,6 +40,11 @@ namespace ESS.Infrastructure.Persistence.Configuration
             builder.Property(x => x.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
+
+            builder.HasOne(x => x.Owner)
+                .WithMany()
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

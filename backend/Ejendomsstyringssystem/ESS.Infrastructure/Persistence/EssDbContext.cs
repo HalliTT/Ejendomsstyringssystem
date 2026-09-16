@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ESS.Domain.Properties;
 using ESS.Domain.Owners;
 using ESS.Domain.Units;
+using ESS.Domain.Users;
 
 namespace ESS.Infrastructure.Persistence
 {
@@ -14,11 +15,16 @@ namespace ESS.Infrastructure.Persistence
         public DbSet<Property> Properties => Set<Property>();
         public DbSet<Owner> Owners => Set<Owner>();
         public DbSet<Unit> Unit => Set<Unit>();
+        public DbSet<AppUser> AppUsers => Set<AppUser>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Unit>()
+                .Property(x => x.Status)
+                .HasConversion<string>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EssDbContext).Assembly);
         }

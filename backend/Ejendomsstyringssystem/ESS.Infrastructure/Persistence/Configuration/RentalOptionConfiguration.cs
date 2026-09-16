@@ -3,14 +3,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ESS.Infrastructure.Persistence.Configuration
 {
-    public class UnitConfiguration : IEntityTypeConfiguration<Domain.Units.Unit>
+    public class RentalOptionConfiguration : IEntityTypeConfiguration<Domain.Rentals.RentalOption>
     {
-        public void Configure(EntityTypeBuilder<Domain.Units.Unit> builder)
+        public void Configure(EntityTypeBuilder<Domain.Rentals.RentalOption> builder)
         {
-            builder.ToTable("units");
+            builder.ToTable("rental_options");
 
-
-            builder.HasKey(t => t.Id);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .HasColumnName("id")
                 .HasDefaultValueSql("gen_random_uuid()");
@@ -26,10 +25,6 @@ namespace ESS.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.Description)
                 .HasColumnName("description")
-                .HasMaxLength(255);
-
-            builder.Property(x => x.Status)
-                .HasColumnName("status")
                 .HasMaxLength(255);
 
             builder.Property(x => x.IsEnabled)
@@ -54,4 +49,3 @@ namespace ESS.Infrastructure.Persistence.Configuration
         }
     }
 }
-
