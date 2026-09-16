@@ -2,6 +2,8 @@ export interface Properties {
   id: string,
   name: string,
   address: string
+  occupiedUnits: number,
+  totalUnits: number
 }
 
 export interface Property {
@@ -11,24 +13,28 @@ export interface Property {
   city: string;
   country: string;
   description: string;
+  occupiedUnits: number;
+  totalUnits: number;
+  units: Unit[];
 }
 
-export interface Units {
-  id: string;
+export interface PropertyInput {
   name: string;
+  address: string;
+  city: string;
+  country: string;
   description: string;
 }
 
-// export interface Property {
-//   id: string;
-//   ownerId: string;
-//   name: string;
-//   address: string;
-//   city: string;
-//   country: string;
-//   description: string;
-//   isEnabled: boolean;
-//   softDeletedAt: Date;
-//   createdAt: Date;
-//   updatedAt: Date;
-// }
+export interface Unit {
+  id: string;
+  name: string;
+  description: string;
+  status: UnitStatus;
+}
+
+export enum UnitStatus {
+  Available,
+  Occupied,
+  Maintenance
+}

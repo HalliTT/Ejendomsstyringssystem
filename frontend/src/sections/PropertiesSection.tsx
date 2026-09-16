@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import "@/components/sections/PropertiesSection.css";
+import "@/sections/PropertiesSection.css";
 import { getProperties } from "@/api/properties";
-import { PropertyCard } from "@/components/sections/PropertyCard";
+import { PropertyCard } from "@/sections/PropertyCard";
 
 export function PropertiesSection() {
   const {

@@ -1,4 +1,4 @@
-import "@/components/sections/PropertyCard.css";
+import "@/sections/PropertyCard.css";
 import type { Properties } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { MapPinIcon } from "@/components/ui/Icons";
@@ -22,7 +22,9 @@ export function PropertyCard({ property }: PropertyCardProps) {
             background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
           }}
         >
-          <Badge variant="warning">2 / 3</Badge>
+          <Badge variant="warning">
+            {property.occupiedUnits} / {property.totalUnits}
+          </Badge>
         </div>
         <div className="property-card-body">
           <div>
@@ -35,13 +37,16 @@ export function PropertyCard({ property }: PropertyCardProps) {
               <div className="property-card-status-item">
                 <span className="status-dot status-dot-occupied" />
                 <span>
-                  <strong>2</strong> occupied
+                  <strong>{property.occupiedUnits}</strong> occupied
                 </span>
               </div>
               <div className="property-card-status-item">
                 <span className="status-dot status-dot-available" />
                 <span>
-                  <strong>0</strong> available
+                  <strong>
+                    {property.totalUnits - property.occupiedUnits}
+                  </strong>{" "}
+                  available
                 </span>
               </div>
             </div>

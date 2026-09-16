@@ -17,11 +17,13 @@ interface CardHeaderProps {
 }
 
 export function CardHeader({ title, subtitle, action }: CardHeaderProps) {
-  <div className="card-header">
-    <div>
-      <h3 className="card-title">{title}</h3>
-      {subtitle && <p className="card-subtitle">{subtitle}</p>}
+  return (
+    <div className="card-header">
+      <div>
+        <h3 className="card-title">{title}</h3>
+        {subtitle && <p className="card-subtitle">{subtitle}</p>}
+      </div>
+      {action}
     </div>
-    {action}
-  </div>;
+  );
 }
