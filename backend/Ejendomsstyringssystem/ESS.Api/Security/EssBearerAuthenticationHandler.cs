@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ESS.Application.Users;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -9,8 +10,13 @@ namespace ESS.Api.Security
     public sealed class EssBearerAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IUserProvisioningService _provisioning;
 
-        public EssBearerAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IHttpClientFactory httpClientFactory) : base(options, logger, encoder) => _httpClientFactory = httpClientFactory;
+        public EssBearerAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IHttpClientFactory httpClientFactory, IUserProvisioningService provisioning) : base(options, logger, encoder)
+        {
+            _httpClientFactory = httpClientFactory;
+            _provisioning = provisioning;
+        }
         
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
@@ -43,6 +49,7 @@ namespace ESS.Api.Security
 
             var identity = new ClaimsIdentity(claims, "EssBearer");
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), "EssBearer");
+            await _provisioning.EnsureUserAsync(payload.Data.UserId, payload.Data.Email, payload.Data.DisplayName, Context.RequestAborted);
             return AuthenticateResult.Success(ticket);
         }
     }

@@ -1,8 +1,10 @@
 ﻿using ESS.Application.Properties;
 using ESS.Application.Units;
+using ESS.Application.Users;
 using ESS.Infrastructure.Persistence;
 using ESS.Infrastructure.Properties;
 using ESS.Infrastructure.Units;
+using ESS.Infrastructure.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,7 @@ namespace ESS.Infrastructure
 
             services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped<IUnitRepository, UnitsRepository>();
+            services.AddScoped<IUserProvisioningService, UserProvisioningService>();
 
             return services;
         }

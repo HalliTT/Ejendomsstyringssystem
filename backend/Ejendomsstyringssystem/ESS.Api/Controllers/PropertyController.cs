@@ -1,5 +1,6 @@
 ﻿using ESS.Api.Contracts.Properties;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESS.Api.Controllers
@@ -14,8 +15,9 @@ namespace ESS.Api.Controllers
         {
             _sender = sender;
         }
-
+        
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> ListProperties(CancellationToken ct)
         {
             var result = await _sender.Send(

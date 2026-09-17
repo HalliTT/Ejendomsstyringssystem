@@ -1,7 +1,8 @@
 import type { Property, Properties, PropertyInput } from "@/types";
+import { authFetch } from "@/lib/auth/authFetch";
 
 export async function getProperties(): Promise<Properties[]> {
-    const response = await fetch("https://localhost:7119/api/properties");
+    const response = await authFetch("https://localhost:7119/api/properties");
 
     if(!response.ok) {
         throw new Error("Failed to fetch properties");
@@ -11,7 +12,7 @@ export async function getProperties(): Promise<Properties[]> {
 }
 
 export async function getProperty(propertyId: string): Promise<Property> {
-    const response = await fetch(`https://localhost:7119/api/properties/${propertyId}`)
+    const response = await authFetch(`https://localhost:7119/api/properties/${propertyId}`)
 
     if(!response.ok) {
         throw new Error("Failed to fetch properties");
@@ -21,7 +22,7 @@ export async function getProperty(propertyId: string): Promise<Property> {
 }
 
 export async function createProperty(property: PropertyInput): Promise<Property> {
-    const response = await fetch(`https://localhost:7119/api/properties`, {
+    const response = await authFetch(`https://localhost:7119/api/properties`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
