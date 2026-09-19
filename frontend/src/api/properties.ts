@@ -36,3 +36,29 @@ export async function createProperty(property: PropertyInput): Promise<Property>
 
     return response.json();
 }
+
+export async function updateProperty(property: PropertyInput, propertyId: string): Promise<Property> {
+    const response = await authFetch(`https://localhost:7119/api/properties/${propertyId}`, {
+        method: "PUT",
+        headers:{
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(property),
+    });
+
+    if (!response.ok){
+        throw new Error("Faild to updated property");
+    }
+
+    return response.json();
+}
+
+export async function deleteProperty(propertyId: string): Promise<void> {
+    const response = await authFetch(`https://localhost:7119/api/properties/${propertyId}`, {
+        method: "DELETE",
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete property");
+    }
+}

@@ -1,4 +1,6 @@
-﻿using ESS.Application.Units;
+﻿using ESS.Application.Common.Interface;
+using ESS.Application.Units;
+using ESS.Application.Users;
 using MediatR;
 
 namespace ESS.Application.Properties.List
@@ -8,15 +10,28 @@ namespace ESS.Application.Properties.List
         private readonly IPropertyRepository _propertyRepository;
         private readonly IUnitRepository _unitRepository;
 
-        public Handler(IPropertyRepository propertyRepository, IUnitRepository unitRepository)
+        private readonly IAppUserRepository _appUserRepository;
+        private readonly ICurrentUser _currentUser;
+
+        public Handler(IPropertyRepository propertyRepository, IUnitRepository unitRepository, IAppUserRepository appUserRepository, ICurrentUser currentUser)
         {
             _propertyRepository = propertyRepository;
             _unitRepository = unitRepository;
+            _appUserRepository = appUserRepository;
+            _currentUser = currentUser;
+            
         }
 
         public async Task<IReadOnlyList<PropertyListItemDto>> Handle(Query request, CancellationToken ct)
         {
-            var properties = await _propertyRepository.ListAsync(ct);
+            if (_currentUser.UserId is null)
+                return Array.Empty<PropertyListItemDto>();
+
+            var appUser = await _appUserRepository.GetByIdAsync(_currentUser.UserId.Value, ct);
+            if (appUser?.OwnerId is null)
+                return Array.Empty<PropertyListItemDto>();
+
+            var properties = await _propertyRepository.ListAsync(appUser.OwnerId.Value, ct);
             var units = await _unitRepository.ListAsync(ct);
             var unitByProperty = units.ToLookup(u => u.PropertyId);
 

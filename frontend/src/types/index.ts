@@ -33,8 +33,35 @@ export interface Unit {
   status: UnitStatus;
 }
 
+export interface UnitInput {
+  name: string,
+  description: string,
+  status: UnitStatus
+}
+
 export enum UnitStatus {
-  Available,
-  Occupied,
-  Maintenance
+  Available = "Available",
+  Occupied = "Occupied",
+  Maintenance = "Maintenance"
+}
+
+
+export type RentalOptionStatus = "Available" | "Unavailable";
+export interface RentalOption {
+  id: string;
+  propertyId: string;
+  name: string;
+  monthlyRent: number;
+  status: RentalOptionStatus;
+}
+export interface RentalOptionUnit {
+  id: string;
+  rentalOptionId: string;
+  unitId: string;
+}
+export interface RentalOptionFormInput {
+  name: string;
+  monthlyRent: number;
+  status: RentalOptionStatus;
+  unitIds: string[];
 }

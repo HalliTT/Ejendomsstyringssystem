@@ -1,5 +1,7 @@
-﻿using ESS.Application.Units;
+﻿using ESS.Application.Common.Interface;
+using ESS.Application.Units;
 using ESS.Application.Units.List;
+using ESS.Application.Users;
 using MediatR;
 
 namespace ESS.Application.Properties.Get
@@ -8,11 +10,15 @@ namespace ESS.Application.Properties.Get
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IUnitRepository _unitRepository;
+        private readonly IAppUserRepository _appUserRepository;
+        private readonly ICurrentUser _currentUser;
 
-        public Handler(IPropertyRepository propertyRepository, IUnitRepository unitRepository)
+        public Handler(IPropertyRepository propertyRepository, IUnitRepository unitRepository, IAppUserRepository appUserRepository, ICurrentUser currentUser)
         {
             _propertyRepository = propertyRepository;
             _unitRepository = unitRepository;
+            _appUserRepository = appUserRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<PropertyDto?> Handle(Query request, CancellationToken ct)
@@ -23,6 +29,13 @@ namespace ESS.Application.Properties.Get
             {
                 return null;
             }
+
+            if (_currentUser is null)
+                throw new UnauthorizedAccessException();
+
+            var appUser = await _appUserRepository.GetByIdAsync(_currentUser.UserId.Value, ct);
+            if (property.OwnerId != appUser.OwnerId)
+                return null;
 
             var units = await  _unitRepository.ListByPropertyIdAsync(request.PropertyId, ct);
 

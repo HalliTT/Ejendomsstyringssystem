@@ -4,7 +4,7 @@ using ESS.Application.Units.Get;
 using ESS.Application.Users;
 using MediatR;
 
-namespace ESS.Application.Units.Create
+namespace ESS.Application.Units.Update
 {
     public sealed class Handler : IRequestHandler<Command, UnitDto?>
     {
@@ -30,27 +30,31 @@ namespace ESS.Application.Units.Create
             if (appUser?.OwnerId is null)
                 return null;
 
-            var property = await _propertyRepository.GetByIdAsync(command.PropertyId, ct);
+            var existingUnit = await _unitRepository.GetByIdAsync(command.UnitId, ct);
+            if (existingUnit is null)
+                return null;
+
+            var property = await _propertyRepository.GetByIdAsync(existingUnit.PropertyId, ct);
             if (property is null || property.OwnerId != appUser.OwnerId)
                 return null;
 
-            var created = await _unitRepository.CreateAsync(
+            var updated = await _unitRepository.UpdateAsync(
+                command.UnitId,
                 command.Name,
-                command.Description ?? "",
+                command.Description,
                 command.Status,
-                command.PropertyId,
                 ct);
 
-            if (created is null)
+            if (updated is null)
                 return null;
 
             return new UnitDto(
-                created.Id,
-                created.PropertyId,
-                created.Name ?? "",
-                created.Description ?? "",
-                created.Status
-                );
+                updated.Id,
+                updated.PropertyId,
+                updated.Name ?? "",
+                updated.Description ?? "",
+                updated.Status
+            );
         }
     }
 }

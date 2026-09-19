@@ -28,6 +28,8 @@ namespace ESS.Api.Controllers
         }
 
         [HttpGet("{propertyId:Guid}")]
+        [Authorize]
+
         public async Task<IActionResult> GetProperty(Guid propertyId, CancellationToken ct)
         {
             var result = await _sender.Send(
@@ -38,6 +40,7 @@ namespace ESS.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyRequest request, CancellationToken ct)
         {
             var command = new Application.Properties.Create.Command(
@@ -50,6 +53,38 @@ namespace ESS.Api.Controllers
             var result = await _sender.Send(command, ct);
 
             return Ok(result);
+        }
+
+        [HttpPut("{propertyId:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProperty(Guid propertyId, [FromBody] UpdatePropertyRequest request, CancellationToken ct)
+        {
+            var command = new Application.Properties.Update.Command(
+                propertyId,
+                request.Name,
+                request.Address,
+                request.City,
+                request.Country,
+                request.Description);
+
+            var result = await _sender.Send(command, ct);
+
+            if (result is null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{propertyId:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteProperty(Guid propertyId, CancellationToken ct)
+        {
+            var deleted = await _sender.Send(new Application.Properties.Delete.Command(propertyId), ct);
+
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using ESS.Application.Properties;
+﻿using ESS.Application.Common.Interface;
+using ESS.Application.Properties;
 using ESS.Application.Units;
 using ESS.Application.Users;
+using ESS.Infrastructure.Common;
 using ESS.Infrastructure.Persistence;
 using ESS.Infrastructure.Properties;
 using ESS.Infrastructure.Units;
@@ -20,6 +22,8 @@ namespace ESS.Infrastructure
             services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped<IUnitRepository, UnitsRepository>();
             services.AddScoped<IUserProvisioningService, UserProvisioningService>();
+            services.AddScoped<IAppUserRepository, AppUserRepository>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
 
             return services;
         }

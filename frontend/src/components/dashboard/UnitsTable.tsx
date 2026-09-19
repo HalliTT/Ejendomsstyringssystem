@@ -52,7 +52,7 @@ export function UnitsTable({ units, onEdit, onDelete }: UnitsTableProps) {
                 <button
                   type="button"
                   className="units-action-btn"
-                  onClick={() => {}}
+                  onClick={() => onEdit(unit)}
                   aria-label={`Edit unit ${unit.name}`}
                 >
                   <PencilIcon width={15} height={15} />
@@ -60,7 +60,7 @@ export function UnitsTable({ units, onEdit, onDelete }: UnitsTableProps) {
                 <button
                   type="button"
                   className="units-action-btn units-action-btn-danger"
-                  onClick={() => {}}
+                  onClick={() => onDelete(unit)}
                 >
                   <TrashIcon width={15} height={15} />
                 </button>

@@ -9,6 +9,10 @@ interface AppShellProps {
   theme: Theme;
   onToggleTheme: () => void;
   onAddClick: () => void;
+  isProfileMenuOpen: boolean;
+  onToggleProfileMenu: () => void;
+  onCloseProfileMenu: () => void;
+  onLogout: () => void;
 }
 
 export function AppShell({
@@ -17,6 +21,10 @@ export function AppShell({
   theme,
   onToggleTheme,
   onAddClick,
+  isProfileMenuOpen,
+  onToggleProfileMenu,
+  onCloseProfileMenu,
+  onLogout,
 }: AppShellProps) {
   return (
     <div className="shell">
@@ -27,6 +35,10 @@ export function AppShell({
           theme={theme}
           onToggleTheme={onToggleTheme}
           onAddClick={onAddClick}
+          isProfileMenuOpen={isProfileMenuOpen}
+          onToggleProfileMenu={onToggleProfileMenu}
+          onCloseProfileMenu={onCloseProfileMenu}
+          onLogout={onLogout}
         />
         <div className="content">{children}</div>
       </div>

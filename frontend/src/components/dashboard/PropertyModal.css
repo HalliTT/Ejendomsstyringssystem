@@ -80,3 +80,8 @@
 .property-modal-submit:hover {
   background: var(--color-accent-hover);
 }
+
+.property-modal-succe-wrapper {
+  display: flex;
+  gap: 1rem;
+}

@@ -1,35 +1,34 @@
 import "@/components/dashboard/PropertyModal.css";
-import { type PropertyInput } from "@/types";
-import { useEffect, useState, type FormEvent } from "react";
+import "@/components/dashboard/UnitModal.css";
+import { UnitStatus, type UnitInput } from "@/types";
+import { useEffect, useState } from "react";
 import { Modal } from "../ui/Modal";
 import { CheckCircleIcon, LoaderIcon } from "../ui/Icons";
 
-interface PropertyModalProps {
+interface UnitModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (input: PropertyInput) => Promise<void>;
-  initialValues?: PropertyInput;
+  onSubmit: (input: UnitInput) => Promise<void>;
+  initialValues?: UnitInput;
   isSubmitting?: boolean;
   isSuccess?: boolean;
 }
 
-const BlankForm: PropertyInput = {
+const BlankForm: UnitInput = {
   name: "",
-  address: "",
-  city: "",
-  country: "",
   description: "",
+  status: UnitStatus.Available,
 };
 
-export function PropertyModal({
+export function UnitModal({
   isOpen,
   onClose,
   onSubmit,
   initialValues,
   isSubmitting,
   isSuccess,
-}: PropertyModalProps) {
-  const [data, setData] = useState<PropertyInput>(initialValues ?? BlankForm);
+}: UnitModalProps) {
+  const [data, setData] = useState<UnitInput>(initialValues ?? BlankForm);
   const isEdit = !!initialValues;
 
   useEffect(() => {
@@ -38,13 +37,7 @@ export function PropertyModal({
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      !data.name.trim() ||
-      !data.address.trim() ||
-      !data.city.trim() ||
-      !data.country.trim() ||
-      !data.description.trim()
-    ) {
+    if (!data.name.trim() || !data.description.trim()) {
       return;
     }
 
@@ -55,68 +48,49 @@ export function PropertyModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEdit ? "Edit property" : "Add a property"}
+      title={isEdit ? "Edit unit" : "Add a unit"}
     >
       <form className="property-modal" onSubmit={handleSubmit}>
         <div className="property-modal-field">
-          <label htmlFor="property-name">Property name</label>
+          <label htmlFor="unit-name">Unit name</label>
           <input
-            id="property-name"
+            id="unit-name"
             required
             value={data.name}
             onChange={(e) => setData({ ...data, name: e.target.value })}
-            placeholder="e.g Fjordveien Residence"
+            placeholder="e.g First Floor"
             disabled={isSubmitting || isSuccess}
           />
         </div>
 
         <div className="property-modal-field">
-          <label htmlFor="property-address">Street address</label>
+          <label htmlFor="unit-description">Description</label>
           <input
-            id="property-address"
+            id="unit-description"
             required
-            value={data.address}
-            onChange={(e) => setData({ ...data, address: e.target.value })}
-            placeholder="e.g Fjordveien 12"
+            value={data.description}
+            onChange={(e) => setData({ ...data, description: e.target.value })}
+            placeholder="e.g This unit is..."
             disabled={isSubmitting || isSuccess}
           />
         </div>
 
         <div className="property-modal-row">
           <div className="property-modal-field">
-            <label htmlFor="property-city">City</label>
-            <input
-              id="property-city"
-              required
-              value={data.city}
-              onChange={(e) => setData({ ...data, city: e.target.value })}
-              placeholder="e.g Oslo"
+            <label htmlFor="unit-status">Status</label>
+            <select
+              id="unit-status"
+              value={data.status}
+              onChange={(e) =>
+                setData({ ...data, status: e.target.value as UnitStatus })
+              }
               disabled={isSubmitting || isSuccess}
-            />
+            >
+              <option value={UnitStatus.Available}>Available</option>
+              <option value={UnitStatus.Occupied}>Occupied</option>
+              <option value={UnitStatus.Maintenance}>Under maintenance</option>
+            </select>
           </div>
-          <div className="property-modal-field">
-            <label htmlFor="property-country">Country</label>
-            <input
-              id="property-country"
-              required
-              value={data.country}
-              onChange={(e) => setData({ ...data, country: e.target.value })}
-              placeholder="e.g Norway"
-              disabled={isSubmitting || isSuccess}
-            />
-          </div>
-        </div>
-
-        <div className="property-modal-field">
-          <label htmlFor="property-description">Description</label>
-          <input
-            id="property-description"
-            required
-            value={data.description}
-            onChange={(e) => setData({ ...data, description: e.target.value })}
-            placeholder="e.g This house is outs..."
-            disabled={isSubmitting || isSuccess}
-          />
         </div>
 
         <div className="property-modal-action">
@@ -144,7 +118,7 @@ export function PropertyModal({
             ) : isEdit ? (
               "Save changes"
             ) : (
-              "Add property"
+              "Add unit"
             )}
           </button>
         </div>

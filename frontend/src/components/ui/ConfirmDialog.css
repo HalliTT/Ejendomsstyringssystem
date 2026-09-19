@@ -1,0 +1,37 @@
+.fc-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.fc-cancel-btn {
+  height: 42px;
+  padding: 0 1.1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.fc-cancel-btn:hover {
+  background: var(--color-bg-hover);
+}
+
+.fc-danger-btn {
+  height: 42px;
+  padding: 0 1.3rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-danger);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: background-color 0.18s var(--ease-out);
+}
+
+.fc-danger-btn:hover {
+  background: #e0332a;
+}

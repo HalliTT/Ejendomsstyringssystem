@@ -1,0 +1,102 @@
+.profile-wrapper {
+  position: relative;
+}
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  background: transparent;
+  padding: 2px;
+  border-radius: var(--radius-full);
+  color: var(--color-text-tertiary);
+  transition: background-color 0.18s var(--ease-out);
+}
+
+.profile-trigger:hover {
+  background: var(--color-bg-hover);
+}
+
+.profile-trigger-chevron {
+  transition: transform 0.2s var(--ease-out);
+}
+
+.profile-trigger-chevron-open {
+  transform: rotate(180deg);
+}
+
+
+.profile-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 260px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 0.5rem;
+  z-index: 50;
+  animation: profile-pop 0.18s var(--ease-out);
+}
+
+.profile-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.6rem 0.8rem;
+}
+
+.profile-panel-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-panel-email {
+  font-size: 0.76rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-panel-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 0.15rem 0.2rem 0.4rem;
+}
+
+.profile-panel-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem 0.6rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-danger);
+  font-size: 0.87rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.profile-panel-btn:hover {
+  background: var(--color-danger-soft);
+}
+
+@keyframes profile-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

@@ -13,6 +13,7 @@ import { startLogin, logout } from "@/lib/auth/login";
 export function DashboardPage() {
   const queryClient = useQueryClient();
   const addPropertyModal = useModalState(false);
+  const profileMenu = useModalState(false);
   const { theme, toggleTheme } = useTheme();
 
   const createPropertyMutation = useMutation({
@@ -43,6 +44,10 @@ export function DashboardPage() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onAddClick={handleOpenAddProperty}
+        isProfileMenuOpen={profileMenu.isOpen}
+        onToggleProfileMenu={profileMenu.toggle}
+        onCloseProfileMenu={profileMenu.close}
+        onLogout={logout}
       >
         {!isLoggedIn ? (
           <div className="dashboard-login">
@@ -65,12 +70,6 @@ export function DashboardPage() {
         ) : (
           <Outlet />
         )}
-        {/* <div className="dashboard-login">
-          {!isLoggedIn && <button onClick={startLogin}>Login</button>}
-        </div>
-        <div></div>
-        {isLoggedIn && <button onClick={logout}>Logout</button>}
-        {isLoggedIn && <Outlet />} */}
       </AppShell>
       <PropertyModal
         isOpen={isLoggedIn && addPropertyModal.isOpen}

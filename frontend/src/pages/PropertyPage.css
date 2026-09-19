@@ -118,6 +118,12 @@
   margin-bottom: 1.25rem;
 }
 
+.detail-section-two-col {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 1.25rem;
+}
+
 .detail-section-add-btn {
   display: inline-flex;
   align-items: center;
