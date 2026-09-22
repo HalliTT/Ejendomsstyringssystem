@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ESS.Infrastructure.Persistence.Configuration
@@ -26,6 +26,17 @@ namespace ESS.Infrastructure.Persistence.Configuration
             builder.Property(x => x.Description)
                 .HasColumnName("description")
                 .HasMaxLength(255);
+
+            builder.Property(x => x.MonthlyRent)
+                .HasColumnName("monthly_rent")
+                .HasColumnType("numeric(10,2)")
+                .IsRequired();
+
+            builder.Property(x => x.Status)
+                .HasColumnName("status")
+                .HasConversion<string>()
+                .HasMaxLength(50)
+                .IsRequired();
 
             builder.Property(x => x.IsEnabled)
                 .HasColumnName("is_enabled")

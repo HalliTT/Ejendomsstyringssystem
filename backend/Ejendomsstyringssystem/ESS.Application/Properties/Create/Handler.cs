@@ -48,7 +48,8 @@ namespace ESS.Application.Properties.Create
                 created.Description,
                 OccupiedUnits: 0,
                 TotalUnits: 0,
-                Units: new List<UnitListItemDto>()
+                Units: new List<UnitListItemDto>(),
+                RentalOptions: new List<Rentals.Get.RentalOptionDto>()
                 );
         }
     }

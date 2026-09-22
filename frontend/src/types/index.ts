@@ -16,6 +16,7 @@ export interface Property {
   occupiedUnits: number;
   totalUnits: number;
   units: Unit[];
+  rentalOptions: RentalOption[];
 }
 
 export interface PropertyInput {
@@ -53,11 +54,7 @@ export interface RentalOption {
   name: string;
   monthlyRent: number;
   status: RentalOptionStatus;
-}
-export interface RentalOptionUnit {
-  id: string;
-  rentalOptionId: string;
-  unitId: string;
+  unitIds: string[];
 }
 export interface RentalOptionFormInput {
   name: string;

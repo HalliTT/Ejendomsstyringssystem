@@ -1,4 +1,5 @@
-﻿using ESS.Application.Units.List;
+﻿using ESS.Application.Rentals.Get;
+using ESS.Application.Units.List;
 
 namespace ESS.Application.Properties.Get
 {
@@ -10,10 +11,11 @@ namespace ESS.Application.Properties.Get
         string City,
         string Country,
         string Description,
-        
+
         int OccupiedUnits,
         int TotalUnits,
 
-        List<UnitListItemDto> Units
+        List<UnitListItemDto> Units,
+        List<RentalOptionDto> RentalOptions
     );
 }

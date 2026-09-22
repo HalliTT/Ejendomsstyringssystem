@@ -1,10 +1,12 @@
 ﻿using ESS.Application.Common.Interface;
 using ESS.Application.Properties;
+using ESS.Application.Rentals;
 using ESS.Application.Units;
 using ESS.Application.Users;
 using ESS.Infrastructure.Common;
 using ESS.Infrastructure.Persistence;
 using ESS.Infrastructure.Properties;
+using ESS.Infrastructure.Rentals;
 using ESS.Infrastructure.Units;
 using ESS.Infrastructure.Users;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,7 @@ namespace ESS.Infrastructure
             services.AddScoped<IUserProvisioningService, UserProvisioningService>();
             services.AddScoped<IAppUserRepository, AppUserRepository>();
             services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<IRentalOptionRepository, RentalOptionRepository>();
 
             return services;
         }

@@ -3,7 +3,18 @@ import { useParams } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProperty, updateProperty, deleteProperty } from "@/api/properties";
 import { updateUnit, deleteUnit, createUnit } from "@/api/units";
-import type { PropertyInput, Unit, UnitInput } from "@/types";
+import {
+  createRentalOption,
+  updateRentalOption,
+  deleteRentalOption,
+} from "@/api/rentalOptions";
+import type {
+  PropertyInput,
+  RentalOption,
+  RentalOptionFormInput,
+  Unit,
+  UnitInput,
+} from "@/types";
 import { useNavigate } from "react-router";
 
 import {
@@ -21,6 +32,7 @@ import { PropertyModal } from "@/components/dashboard/PropertyModal";
 import { useModalState } from "@/hooks/useModalState";
 import { UnitModal } from "@/components/dashboard/UnitModal";
 import { RentalOptionsList } from "@/components/dashboard/RentalOptionsList";
+import { RentalOptionModal } from "@/components/dashboard/RentalOptionModal";
 
 export function PropertyPage() {
   const { propertyId } = useParams();
@@ -31,6 +43,12 @@ export function PropertyPage() {
 
   const [editingUnit, setEditingUnit] = useState<Unit | null>(null);
   const [unitPendingDelete, setUnitPendingDelete] = useState<Unit | null>(null);
+
+  const rentalOptionModal = useModalState(false);
+  const [editingRentalOption, setEditingRentalOption] =
+    useState<RentalOption | null>(null);
+  const [rentalOptionPendingDelete, setRentalOptionPendingDelete] =
+    useState<RentalOption | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -107,6 +125,35 @@ export function PropertyPage() {
     },
   });
 
+  const createRentalOptionMutation = useMutation({
+    mutationFn: (data: RentalOptionFormInput) =>
+      createRentalOption(data, propertyId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property", propertyId],
+      });
+    },
+  });
+
+  const updateRentalOptionMutation = useMutation({
+    mutationFn: (data: RentalOptionFormInput) =>
+      updateRentalOption(data, editingRentalOption?.id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property", propertyId],
+      });
+    },
+  });
+
+  const deleteRentalOptionMutation = useMutation({
+    mutationFn: deleteRentalOption,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property", propertyId],
+      });
+    },
+  });
+
   // PROPERTY
 
   const handleConfirmDelete = () => {
@@ -141,6 +188,32 @@ export function PropertyPage() {
       await updateUnitMutation.mutateAsync(unitData);
     } else {
       await createUnitMutation.mutateAsync(unitData);
+    }
+  };
+
+  // RENTAL OPTION
+
+  const openAddRentalOption = () => {
+    setEditingRentalOption(null);
+    rentalOptionModal.open();
+  };
+
+  const openEditRentalOption = (option: RentalOption) => {
+    setEditingRentalOption(option);
+    rentalOptionModal.open();
+  };
+
+  const handleConfirmDeleteRentalOption = () => {
+    if (!rentalOptionPendingDelete) return;
+    deleteRentalOptionMutation.mutate(rentalOptionPendingDelete.id);
+    setRentalOptionPendingDelete(null);
+  };
+
+  const submitRentalOption = async (input: RentalOptionFormInput) => {
+    if (editingRentalOption) {
+      await updateRentalOptionMutation.mutateAsync(input);
+    } else {
+      await createRentalOptionMutation.mutateAsync(input);
     }
   };
 
@@ -242,7 +315,7 @@ export function PropertyPage() {
                 <button
                   type="button"
                   className="detail-section-add-btn"
-                  onClick={openAddUnit}
+                  onClick={openAddRentalOption}
                 >
                   <PlusIcon width={15} height={15} />
                   Add rental option
@@ -250,7 +323,7 @@ export function PropertyPage() {
               }
             />
             <RentalOptionsList
-              rentalOptions={}
+              rentalOptions={property?.rentalOptions ?? []}
               units={property?.units}
               onEdit={openEditRentalOption}
               onDelete={setRentalOptionPendingDelete}
@@ -313,6 +386,45 @@ export function PropertyPage() {
         confirmLabel="Delete unit"
         onConfirm={handleConfirmDeleteUnit}
         onCancel={() => setUnitPendingDelete(null)}
+      />
+
+      <RentalOptionModal
+        isOpen={rentalOptionModal.isOpen}
+        onClose={() => {
+          rentalOptionModal.close();
+          createRentalOptionMutation.reset();
+          updateRentalOptionMutation.reset();
+        }}
+        onSubmit={submitRentalOption}
+        units={property?.units ?? []}
+        initialValues={
+          editingRentalOption
+            ? {
+                name: editingRentalOption.name,
+                monthlyRent: editingRentalOption.monthlyRent,
+                status: editingRentalOption.status,
+                unitIds: editingRentalOption.unitIds,
+              }
+            : undefined
+        }
+        isSubmitting={
+          editingRentalOption
+            ? updateRentalOptionMutation.isPending
+            : createRentalOptionMutation.isPending
+        }
+        isSuccess={
+          editingRentalOption
+            ? updateRentalOptionMutation.isSuccess
+            : createRentalOptionMutation.isSuccess
+        }
+      />
+      <ConfirmDialog
+        isOpen={!!rentalOptionPendingDelete}
+        title="Delete rental option"
+        message={`Are you sure you want to delete rental option, ${rentalOptionPendingDelete?.name}?`}
+        confirmLabel="Delete rental option"
+        onConfirm={handleConfirmDeleteRentalOption}
+        onCancel={() => setRentalOptionPendingDelete(null)}
       />
     </div>
   );

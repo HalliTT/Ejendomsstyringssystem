@@ -1,5 +1,7 @@
 using ESS.Application.Common.Interface;
 using ESS.Application.Properties.Get;
+using ESS.Application.Rentals;
+using ESS.Application.Rentals.Get;
 using ESS.Application.Units;
 using ESS.Application.Units.List;
 using ESS.Application.Users;
@@ -11,17 +13,20 @@ namespace ESS.Application.Properties.Update
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IUnitRepository _unitRepository;
+        private readonly IRentalOptionRepository _rentalOptionRepository;
         private readonly IAppUserRepository _appUserRepository;
         private readonly ICurrentUser _currentUser;
 
         public Handler(
             IPropertyRepository propertyRepository,
             IUnitRepository unitRepository,
+            IRentalOptionRepository rentalOptionRepository,
             IAppUserRepository appUserRepository,
             ICurrentUser currentUser)
         {
             _propertyRepository = propertyRepository;
             _unitRepository = unitRepository;
+            _rentalOptionRepository = rentalOptionRepository;
             _appUserRepository = appUserRepository;
             _currentUser = currentUser;
         }
@@ -53,6 +58,10 @@ namespace ESS.Application.Properties.Update
 
             var units = await _unitRepository.ListByPropertyIdAsync(command.PropertyId, ct);
 
+            var rentalOptions = await _rentalOptionRepository.ListByPropertyIdAsync(command.PropertyId, ct);
+            var unitIdsByOption = await _rentalOptionRepository.GetUnitIdsByRentalOptionIdsAsync(
+                rentalOptions.Select(r => r.Id).ToList(), ct);
+
             return new PropertyDto(
                 updated.Id,
                 updated.Name ?? "",
@@ -62,7 +71,15 @@ namespace ESS.Application.Properties.Update
                 updated.Description ?? "",
                 units.Count(u => u.Status == Domain.Units.UnitStatus.Occupied),
                 units.Count,
-                units.Select(u => new UnitListItemDto(u.Id, u.Name ?? "", u.Description ?? "", u.Status)).ToList()
+                units.Select(u => new UnitListItemDto(u.Id, u.Name ?? "", u.Description ?? "", u.Status)).ToList(),
+                rentalOptions.Select(r => new RentalOptionDto(
+                    r.Id,
+                    r.PropertyId,
+                    r.Name ?? "",
+                    r.MonthlyRent,
+                    r.Status,
+                    unitIdsByOption.TryGetValue(r.Id, out var unitIds) ? unitIds : new List<Guid>()))
+                .ToList()
             );
         }
     }
