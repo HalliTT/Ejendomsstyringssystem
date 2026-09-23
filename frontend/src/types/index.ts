@@ -62,3 +62,43 @@ export interface RentalOptionFormInput {
   status: RentalOptionStatus;
   unitIds: string[];
 }
+
+export interface RentalOptionSummary {
+  id: string;
+  name: string;
+  monthlyRent: number;
+  status: RentalOptionStatus;
+  propertyId: string;
+  propertyName: string;
+}
+
+export interface Tenant {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export type BookingStatus = "Upcoming" | "Active" | "Completed";
+
+export interface Booking {
+  id: string;
+  rentalOptionId: string;
+  rentalOptionName: string;
+  propertyId: string;
+  propertyName: string;
+  tenantId: string;
+  tenantName: string;
+  tenantEmail: string;
+  tenantPhone: string;
+  startDate: string;
+  endDate: string;
+  status: BookingStatus;
+}
+
+export interface BookingFormInput {
+  rentalOptionId: string;
+  tenantId: string;
+  startDate: string;
+  endDate: string;
+}
