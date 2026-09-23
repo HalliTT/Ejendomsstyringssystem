@@ -1,20 +1,28 @@
 import "@/pages/DashboardPage.css";
 import { AppShell } from "@/components/layout/AppShell";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { useModalState } from "@/hooks/useModalState";
 import { useTheme } from "@/hooks/useTheme";
 import { PropertyModal } from "@/components/dashboard/PropertyModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createProperty } from "@/api/properties";
 import type { PropertyInput } from "@/types";
-import { useAuth } from "@/hooks/useAuth";
-import { startLogin, logout } from "@/lib/auth/login";
+import { useAuth } from "@/contexts/AuthContext";
+import { LoginOverlay } from "@/components/layout/LoginOverlay";
+
+function getPageTitle(pathname: string): string {
+  if (pathname.startsWith("/dashboard/properties")) return "Properties";
+  if (pathname.startsWith("/dashboard/bookings")) return "Bookings";
+  return "Dashboard";
+}
 
 export function DashboardPage() {
   const queryClient = useQueryClient();
   const addPropertyModal = useModalState(false);
   const profileMenu = useModalState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const pageTitle = getPageTitle(location.pathname);
 
   const createPropertyMutation = useMutation({
     mutationFn: createProperty,
@@ -35,12 +43,12 @@ export function DashboardPage() {
     addPropertyModal.open();
   };
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <>
       <AppShell
-        pageTitle="tak"
+        pageTitle={pageTitle}
         theme={theme}
         onToggleTheme={toggleTheme}
         onAddClick={handleOpenAddProperty}
@@ -49,28 +57,9 @@ export function DashboardPage() {
         onCloseProfileMenu={profileMenu.close}
         onLogout={logout}
       >
-        {!isLoggedIn ? (
-          <div className="dashboard-login">
-            <div className="dashboard-login-backdrop">
-              <div className="fake-card fake-card-large" />
-              <div className="fake-card" />
-              <div className="fake-card" />
-              <div className="fake-card" />
-              <div className="fake-card" />
-              <div className="fake-card" />
-            </div>
-
-            <div className="dashboard-login-card">
-              <h2>Welcome to your dashboard</h2>
-              <p>Log in to view your properties and manage your account.</p>
-
-              <button onClick={startLogin}>Login</button>
-            </div>
-          </div>
-        ) : (
-          <Outlet />
-        )}
+        {isLoggedIn && <Outlet />}
       </AppShell>
+      {!isLoggedIn && <LoginOverlay />}
       <PropertyModal
         isOpen={isLoggedIn && addPropertyModal.isOpen}
         onClose={addPropertyModal.close}

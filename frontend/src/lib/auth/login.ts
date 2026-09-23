@@ -27,26 +27,3 @@ export async function startLogin() {
 
   window.location.href = authUrl;
 }
-
-export async function logout() {
-    const sessionId = localStorage.getItem("session_id")
-
-    try {
-      if (sessionId) {
-        await fetch("http://localhost:5000/auth/logout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId }),
-        });
-      }
-    } catch (error) {
-      console.error("Logout request failed:", error);
-    } finally {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("access_token_expires_at");
-      localStorage.removeItem("refresh_token_expires_at");
-      localStorage.removeItem("session_id");
-      localStorage.removeItem("user_id");
-    }
-}

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CallBackPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { markLoggedIn } = useAuth();
 
   function getDeviceId() {
     let id = localStorage.getItem("device_id");
@@ -54,13 +56,14 @@ export default function CallBackPage() {
         localStorage.setItem("session_id", data.data.sessionId);
         localStorage.setItem("user_id", data.data.userId);
 
+        markLoggedIn();
         navigate("/dashboard", { replace: true });
       } catch (err: any) {
         setError(err.message);
       }
     }
     run();
-  }, [navigate]);
+  }, [navigate, markLoggedIn]);
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   return <p>Signing you in...</p>;
