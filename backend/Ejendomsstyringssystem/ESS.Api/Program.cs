@@ -1,6 +1,7 @@
 using ESS.Api.Security;
 using ESS.Domain.Owners;
 using ESS.Domain.Properties;
+using ESS.Domain.Tenants;
 using ESS.Infrastructure;
 using ESS.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
@@ -125,6 +126,42 @@ if (app.Environment.IsDevelopment())
             };
             db.Unit.Add(newUnit);
         }
+
+        if (!db.Tenants.Any())
+        {
+            db.Tenants.AddRange(
+                new Tenant
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Mette Larsen",
+                    Email = "mette.larsen@example.com",
+                    Phone = "+45 20 11 22 33",
+                    IsEnabled = true,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                },
+                new Tenant
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Jonas Berg",
+                    Email = "jonas.berg@example.com",
+                    Phone = "+45 30 44 55 66",
+                    IsEnabled = true,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                },
+                new Tenant
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Sofie Nielsen",
+                    Email = "sofie.nielsen@example.com",
+                    Phone = "+45 40 77 88 99",
+                    IsEnabled = true,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                });
+        }
+
         db.SaveChanges();
     }
 }

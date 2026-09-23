@@ -22,6 +22,17 @@ namespace ESS.Infrastructure.Rentals
                 .ToListAsync(ct);
         }
 
+        public async Task<IReadOnlyList<RentalOption>> ListByOwnerIdAsync(Guid ownerId, CancellationToken ct)
+        {
+            var query =
+                from rentalOption in _context.RentalOptions
+                join property in _context.Properties on rentalOption.PropertyId equals property.Id
+                where property.OwnerId == ownerId && rentalOption.SoftDeletedAt == null
+                select rentalOption;
+
+            return await query.AsNoTracking().ToListAsync(ct);
+        }
+
         public async Task<IReadOnlyDictionary<Guid, List<Guid>>> GetUnitIdsByRentalOptionIdsAsync(IReadOnlyList<Guid> rentalOptionIds, CancellationToken ct)
         {
             var links = await _context.RentalOptionUnits

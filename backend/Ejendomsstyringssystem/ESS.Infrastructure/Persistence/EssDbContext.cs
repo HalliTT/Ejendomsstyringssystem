@@ -7,6 +7,7 @@ using ESS.Domain.Owners;
 using ESS.Domain.Units;
 using ESS.Domain.Users;
 using ESS.Domain.Rentals;
+using ESS.Domain.Tenants;
 
 namespace ESS.Infrastructure.Persistence
 {
@@ -19,6 +20,7 @@ namespace ESS.Infrastructure.Persistence
         public DbSet<AppUser> AppUsers => Set<AppUser>();
         public DbSet<RentalOption> RentalOptions => Set<RentalOption>();
         public DbSet<RentalOptionUnit> RentalOptionUnits => Set<RentalOptionUnit>();
+        public DbSet<Tenant> Tenants => Set<Tenant>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
