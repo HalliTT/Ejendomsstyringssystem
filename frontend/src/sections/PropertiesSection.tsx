@@ -4,16 +4,16 @@ import { getProperties } from "@/api/properties";
 import { PropertyCard } from "@/sections/PropertyCard";
 import { useMemo, useState } from "react";
 
-type PropertyType = "apartment" | "house";
+type OccupancyFilter = "all" | "vacant" | "full";
 
-const Filter_Type: Array<{ id: PropertyType | "all"; label: string }> = [
-  { id: "all", label: "All types" },
-  { id: "house", label: "House" },
-  { id: "apartment", label: "Apartment building" },
+const Filter_Type: Array<{ id: OccupancyFilter; label: string }> = [
+  { id: "all", label: "All properties" },
+  { id: "vacant", label: "Has vacancies" },
+  { id: "full", label: "Fully occupied" },
 ];
 
 export function PropertiesSection() {
-  const [typeFilter, setTypeFilter] = useState<PropertyType | "all">("all");
+  const [occupancyFilter, setOccupancyFilter] = useState<OccupancyFilter>("all");
 
   const {
     data: properties,
@@ -26,11 +26,18 @@ export function PropertiesSection() {
 
   const filteredProperties = useMemo(() => {
     return properties?.filter((property) => {
-      const matchedType = typeFilter === "all" || property.name === typeFilter;
-
-      return matchedType;
+      if (occupancyFilter === "vacant") {
+        return property.occupiedUnits < property.totalUnits;
+      }
+      if (occupancyFilter === "full") {
+        return (
+          property.totalUnits > 0 &&
+          property.occupiedUnits === property.totalUnits
+        );
+      }
+      return true;
     });
-  }, [properties, typeFilter]);
+  }, [properties, occupancyFilter]);
 
   if (isLoading) {
     return <p>Loading properties...</p>;
@@ -47,8 +54,8 @@ export function PropertiesSection() {
           <button
             key={filter.id}
             type="button"
-            className={`properties-pill ${typeFilter === filter.id ? "properties-pill-active" : ""}`}
-            onClick={() => setTypeFilter(filter.id)}
+            className={`properties-pill ${occupancyFilter === filter.id ? "properties-pill-active" : ""}`}
+            onClick={() => setOccupancyFilter(filter.id)}
           >
             {filter.label}
           </button>
@@ -57,13 +64,13 @@ export function PropertiesSection() {
 
       {filteredProperties?.length === 0 ? (
         <p className="properties-grid-empty">
-          {typeFilter === "all"
+          {occupancyFilter === "all"
             ? `No properties yet. Use "Add property" to start building.`
-            : "No properties match your search."}
+            : "No properties match this filter."}
         </p>
       ) : (
         <div className="properties-grid">
-          {properties?.map((property) => (
+          {filteredProperties?.map((property) => (
             <PropertyCard key={property.id} property={property}></PropertyCard>
           ))}
         </div>
