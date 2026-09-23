@@ -1,9 +1,11 @@
-﻿using ESS.Application.Common.Interface;
+﻿using ESS.Application.Bookings;
+using ESS.Application.Common.Interface;
 using ESS.Application.Properties;
 using ESS.Application.Rentals;
 using ESS.Application.Tenants;
 using ESS.Application.Units;
 using ESS.Application.Users;
+using ESS.Infrastructure.Bookings;
 using ESS.Infrastructure.Common;
 using ESS.Infrastructure.Persistence;
 using ESS.Infrastructure.Properties;
@@ -29,6 +31,7 @@ namespace ESS.Infrastructure
             services.AddScoped<IAppUserRepository, AppUserRepository>();
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddScoped<IRentalOptionRepository, RentalOptionRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ITenantRepository, TenantRepository>();
 
             return services;
