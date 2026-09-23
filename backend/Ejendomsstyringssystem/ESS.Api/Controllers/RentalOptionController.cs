@@ -17,6 +17,14 @@ namespace ESS.Api.Controllers
             _sender = sender;
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ListMyRentalOptions(CancellationToken ct)
+        {
+            var result = await _sender.Send(new Application.Rentals.ListMine.Query(), ct);
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateRentalOption([FromBody] CreateRentalOptionRequest request, CancellationToken ct)
