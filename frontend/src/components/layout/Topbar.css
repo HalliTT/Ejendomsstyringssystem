@@ -28,10 +28,6 @@
   white-space: nowrap;
 }
 
-.topbar-search {
-  width: 260px;
-}
-
 .topbar-right {
   display: flex;
   align-items: center;
@@ -67,10 +63,4 @@
   width: 1px;
   height: 24px;
   background: var(--color-border);
-}
-
-@media (max-width: 860px) {
-  .topbar-search {
-    display: none;
-  }
 }

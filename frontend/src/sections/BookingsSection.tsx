@@ -55,6 +55,7 @@ export function BookingsSection() {
     try {
       await createBookingMutation.mutateAsync(input);
     } catch {
+      // surfaced via errorMessage state (set in onError above)
     }
   };
 

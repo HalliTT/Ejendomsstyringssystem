@@ -32,7 +32,6 @@ export function Topbar({
       </div>
 
       <div className="topbar-right">
-        <div className="topbar-search">Search</div>
         <button type="button" className="topbar-add-btn" onClick={onAddClick}>
           <PlusIcon width={17} height={17} />
           <span>Add property</span>
