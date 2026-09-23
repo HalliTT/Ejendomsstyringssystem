@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ESS.Infrastructure.Persistence.Configuration
@@ -29,6 +29,17 @@ namespace ESS.Infrastructure.Persistence.Configuration
             builder.Property(x => x.EndDate)
                 .HasColumnName("end_date")
                 .IsRequired();
+
+            builder.Property(x => x.SoftDeletedAt)
+                .HasColumnName("soft_deleted_at");
+
+            builder.Property(x => x.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("now()");
+
+            builder.Property(x => x.UpdatedAt)
+                    .HasColumnName("updated_at")
+                    .HasDefaultValueSql("now()");
 
             builder.HasOne<Domain.Rentals.RentalOption>()
                 .WithMany()
