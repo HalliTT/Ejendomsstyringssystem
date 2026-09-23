@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.txt" />
+  </Folder>
+  <Project Path="ESS.Api/ESS.Api.csproj">
+    <BuildDependency Project="ESS.Application/ESS.Application.csproj" />
+    <BuildDependency Project="ESS.Domain/ESS.Domain.csproj" />
+  </Project>
+  <Project Path="ESS.Application/ESS.Application.csproj">
+    <BuildDependency Project="ESS.Domain/ESS.Domain.csproj" />
+  </Project>
+  <Project Path="ESS.Domain/ESS.Domain.csproj" />
+  <Project Path="ESS.Infrastructure/ESS.Infrastructure.csproj" />
+</Solution>
