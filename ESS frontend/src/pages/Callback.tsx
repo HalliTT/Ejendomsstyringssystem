@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/contexts/AuthContext";
+import { AUTH_API_URL } from "@/api/config";
 
 export default function CallBackPage() {
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export default function CallBackPage() {
       if (!code) return setError("Missing authorization code");
 
       try {
-        const res = await fetch("http://localhost:5000/auth/token", {
+        const res = await fetch(`${AUTH_API_URL}/auth/token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

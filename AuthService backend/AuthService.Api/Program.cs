@@ -55,14 +55,20 @@ builder.Services.AddScoped<IMapper, ServiceMapper>();
 builder.Services.AddHttpContextAccessor();
 
 // Config CORS
+string[] allowedOrigins =
+[
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    .. builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? []
+];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000")
-            .WithOrigins("http://localhost:3001")
-            .WithOrigins("http://localhost:3002")
+            .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -143,14 +149,19 @@ if (!app.Environment.IsEnvironment("Testing"))
         }
 
         var predefinedClientId = Guid.Parse("aebf55f2-b076-493c-bda0-e27ac102187d");
-        if (!db.Applications.Any(a => a.ClientId == predefinedClientId))
+        var appId = db.Applications
+                      .Where(a => a.ClientId == predefinedClientId)
+                      .Select(a => (Guid?)a.Id)
+                      .FirstOrDefault();
+
+        if (appId is null)
         {
-            var appId = Guid.NewGuid();
+            appId = Guid.NewGuid();
             var clientSecret = Guid.NewGuid().ToString("N");
 
             var application = new Application
             {
-                Id = appId,
+                Id = appId.Value,
                 Name = "Local Demo App",
                 OrganizationId = organizationId,
                 ClientId = predefinedClientId,
@@ -160,28 +171,32 @@ if (!app.Environment.IsEnvironment("Testing"))
                 UpdatedAt = DateTime.UtcNow
             };
 
-            //var redirect = new ApplicationRedirectUris
-            //{
-            //    Id = Guid.NewGuid(),
-            //    ApplicationId = appId,
-            //    RedirectUris = "http://localhost:3001/callback",
-            //    CreatedAt = DateTime.UtcNow,
-            //    UpdatedAt = DateTime.UtcNow
-            //};
-            var redirect = new ApplicationRedirectUris
-            {
-                Id = Guid.NewGuid(),
-                ApplicationId = appId,
-                RedirectUris = "http://8craft.dk/demo/callback",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            application.ApplicationRedirectUrises.Add(redirect);
-
             db.Applications.Add(application);
             db.SaveChanges();
         }
+
+        string[] predefinedRedirectUris =
+        [
+            "http://localhost:3001/callback",
+            "http://8craft.dk/demo/callback"
+        ];
+
+        var redirectUris = db.Set<ApplicationRedirectUris>();
+        foreach (var uri in predefinedRedirectUris)
+        {
+            if (!redirectUris.Any(r => r.ApplicationId == appId && r.RedirectUris == uri))
+            {
+                redirectUris.Add(new ApplicationRedirectUris
+                {
+                    Id = Guid.NewGuid(),
+                    ApplicationId = appId.Value,
+                    RedirectUris = uri,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+            }
+        }
+        db.SaveChanges();
     }
 }
 

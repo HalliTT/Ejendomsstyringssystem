@@ -1,8 +1,9 @@
 import type { Unit, UnitInput } from "@/types";
 import { authFetch } from "@/lib/auth/authFetch";
+import { API_URL } from "@/api/config";
 
 export async function getUnit(unitId: string): Promise<Unit> {
-    const response = await authFetch(`https://localhost:7119/api/units/${unitId}`)
+    const response = await authFetch(`${API_URL}/api/units/${unitId}`)
 
     if(!response.ok) {
         throw new Error("Failed to fetch units");
@@ -12,7 +13,7 @@ export async function getUnit(unitId: string): Promise<Unit> {
 }
 
 export async function createUnit(unit: UnitInput, propertyId: string): Promise<Unit> {
-    const response = await authFetch(`https://localhost:7119/api/units`, {
+    const response = await authFetch(`${API_URL}/api/units`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -28,7 +29,7 @@ export async function createUnit(unit: UnitInput, propertyId: string): Promise<U
 }
 
 export async function updateUnit(unit: UnitInput, unitId: string): Promise<Unit> {
-    const response = await authFetch(`https://localhost:7119/api/units/${unitId}`, {
+    const response = await authFetch(`${API_URL}/api/units/${unitId}`, {
         method: "PUT",
         headers:{
             "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export async function updateUnit(unit: UnitInput, unitId: string): Promise<Unit>
 }
 
 export async function deleteUnit(unitId: string): Promise<void> {
-    const response = await authFetch(`https://localhost:7119/api/units/${unitId}`, {
+    const response = await authFetch(`${API_URL}/api/units/${unitId}`, {
         method: "DELETE",
     });
 

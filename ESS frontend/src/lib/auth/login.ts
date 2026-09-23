@@ -1,4 +1,5 @@
 import { generatePKCE } from "./pkce";
+import { AUTH_URL } from "@/api/config";
 
 export async function startLogin() {
   const { codeVerifier, sha256 } = generatePKCE();
@@ -8,7 +9,7 @@ export async function startLogin() {
   const codeChallenge = await sha256(codeVerifier);
 
   const redirectUri = encodeURIComponent(
-    "http://localhost:3001/callback"
+    `${window.location.origin}/callback`
   );
 
   const clientId = "aebf55f2-b076-493c-bda0-e27ac102187d";
@@ -16,7 +17,7 @@ export async function startLogin() {
   const state = crypto.randomUUID();
 
   const authUrl =
-    `http://localhost:3000/authorize?` +
+    `${AUTH_URL}/?` +
     `response_type=code` +
     `&client_id=${clientId}` +
     `&redirect_uri=${redirectUri}` +

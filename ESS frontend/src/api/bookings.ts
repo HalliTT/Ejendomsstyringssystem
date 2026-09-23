@@ -1,8 +1,9 @@
 import type { Booking, BookingFormInput } from "@/types";
 import { authFetch } from "@/lib/auth/authFetch";
+import { API_URL } from "@/api/config";
 
 export async function getBookings(): Promise<Booking[]> {
-    const response = await authFetch("https://localhost:7119/api/bookings");
+    const response = await authFetch(`${API_URL}/api/bookings`);
 
     if (!response.ok) {
         throw new Error("Failed to fetch bookings");
@@ -12,7 +13,7 @@ export async function getBookings(): Promise<Booking[]> {
 }
 
 export async function getBooking(bookingId: string): Promise<Booking> {
-    const response = await authFetch(`https://localhost:7119/api/bookings/${bookingId}`);
+    const response = await authFetch(`${API_URL}/api/bookings/${bookingId}`);
 
     if (!response.ok) {
         throw new Error("Failed to fetch booking");
@@ -22,7 +23,7 @@ export async function getBooking(bookingId: string): Promise<Booking> {
 }
 
 export async function createBooking(input: BookingFormInput): Promise<Booking> {
-    const response = await authFetch("https://localhost:7119/api/bookings", {
+    const response = await authFetch(`${API_URL}/api/bookings`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export async function createBooking(input: BookingFormInput): Promise<Booking> {
 }
 
 export async function updateBooking(input: BookingFormInput, bookingId: string): Promise<Booking> {
-    const response = await authFetch(`https://localhost:7119/api/bookings/${bookingId}`, {
+    const response = await authFetch(`${API_URL}/api/bookings/${bookingId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -60,7 +61,7 @@ export async function updateBooking(input: BookingFormInput, bookingId: string):
 }
 
 export async function deleteBooking(bookingId: string): Promise<void> {
-    const response = await authFetch(`https://localhost:7119/api/bookings/${bookingId}`, {
+    const response = await authFetch(`${API_URL}/api/bookings/${bookingId}`, {
         method: "DELETE",
     });
 

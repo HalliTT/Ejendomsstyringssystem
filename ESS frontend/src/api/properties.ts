@@ -1,8 +1,9 @@
 import type { Property, Properties, PropertyInput } from "@/types";
 import { authFetch } from "@/lib/auth/authFetch";
+import { API_URL } from "@/api/config";
 
 export async function getProperties(): Promise<Properties[]> {
-    const response = await authFetch("https://localhost:7119/api/properties");
+    const response = await authFetch(`${API_URL}/api/properties`);
 
     if(!response.ok) {
         throw new Error("Failed to fetch properties");
@@ -12,7 +13,7 @@ export async function getProperties(): Promise<Properties[]> {
 }
 
 export async function getProperty(propertyId: string): Promise<Property> {
-    const response = await authFetch(`https://localhost:7119/api/properties/${propertyId}`)
+    const response = await authFetch(`${API_URL}/api/properties/${propertyId}`)
 
     if(!response.ok) {
         throw new Error("Failed to fetch properties");
@@ -22,7 +23,7 @@ export async function getProperty(propertyId: string): Promise<Property> {
 }
 
 export async function createProperty(property: PropertyInput): Promise<Property> {
-    const response = await authFetch(`https://localhost:7119/api/properties`, {
+    const response = await authFetch(`${API_URL}/api/properties`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -38,7 +39,7 @@ export async function createProperty(property: PropertyInput): Promise<Property>
 }
 
 export async function updateProperty(property: PropertyInput, propertyId: string): Promise<Property> {
-    const response = await authFetch(`https://localhost:7119/api/properties/${propertyId}`, {
+    const response = await authFetch(`${API_URL}/api/properties/${propertyId}`, {
         method: "PUT",
         headers:{
             "Content-Type": "application/json",
@@ -54,7 +55,7 @@ export async function updateProperty(property: PropertyInput, propertyId: string
 }
 
 export async function deleteProperty(propertyId: string): Promise<void> {
-    const response = await authFetch(`https://localhost:7119/api/properties/${propertyId}`, {
+    const response = await authFetch(`${API_URL}/api/properties/${propertyId}`, {
         method: "DELETE",
     });
 

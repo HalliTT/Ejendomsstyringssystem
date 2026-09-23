@@ -11,5 +11,5 @@ FROM oven/bun:1
 WORKDIR /app
 COPY --from=builder /app ./
 
-EXPOSE 3000
+EXPOSE 3001
 CMD ["bun", "run", "start"]

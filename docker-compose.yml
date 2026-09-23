@@ -1,0 +1,65 @@
+name: ejendomsstyringssystem
+
+services:
+  postgres:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_DB=authdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d authdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth-backend:
+    build: ./AuthService backend
+    environment:
+      - ConnectionStrings__NewDockerSetup=Host=postgres;Port=5432;Database=authdb;Username=postgres;Password=postgres
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  auth-frontend:
+    build: ./AuthService frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-backend
+
+  ess-backend:
+    build: ./ESS backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=ESS;Username=postgres;Password=postgres
+      - AuthService__BaseUrl=http://auth-backend:8080/
+    ports:
+      - "5283:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-backend:
+        condition: service_started
+
+  ess-frontend:
+    build: ./ESS frontend
+    environment:
+      - BUN_PUBLIC_API_URL=http://localhost:5283
+      - BUN_PUBLIC_AUTH_URL=http://localhost:3000
+      - BUN_PUBLIC_AUTH_API_URL=http://localhost:5000
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - ess-backend
+
+volumes:
+  postgres_data:

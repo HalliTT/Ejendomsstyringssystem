@@ -31,12 +31,18 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ESS.A
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Config CORS
+string[] allowedOrigins =
+[
+    "http://localhost:3001",
+    .. builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? []
+];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3001")
+            .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -46,13 +52,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<EssDbContext>().Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
         var db = scope.ServiceProvider.GetRequiredService<EssDbContext>();
-        db.Database.Migrate();
 
         var owner = db.Owners
                         .AsNoTracking()
