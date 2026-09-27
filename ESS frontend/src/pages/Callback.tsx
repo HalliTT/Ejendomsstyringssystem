@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { AUTH_API_URL } from "@/api/config";
@@ -7,6 +7,7 @@ export default function CallBackPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { markLoggedIn } = useAuth();
+  const exchangeStarted = useRef(false);
 
   function getDeviceId() {
     let id = localStorage.getItem("device_id");
@@ -18,6 +19,9 @@ export default function CallBackPage() {
   }
 
   useEffect(() => {
+    if (exchangeStarted.current) return;
+    exchangeStarted.current = true;
+
     async function run() {
       const params = new URLSearchParams(window.location.search);
 
